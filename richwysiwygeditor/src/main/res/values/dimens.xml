@@ -1,0 +1,7 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="toolbar_icon_width_size">38dp</dimen>
+    <dimen name="toolbar_icon_height_size">35dp</dimen>
+    <dimen name="color_button_size">35dp</dimen>
+
+</resources>

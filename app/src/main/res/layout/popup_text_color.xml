@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/color_white"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/popup_white_button" />
+
+        <Button
+            android:id="@+id/color_black"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/black" />
+
+        <Button
+            android:id="@+id/color_lime"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/lime" />
+
+        <Button
+            android:id="@+id/color_red"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/red" />
+
+        <Button
+            android:id="@+id/color_orange"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/orange" />
+
+        <Button
+            android:id="@+id/color_blue"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/blue" />
+
+        <Button
+            android:id="@+id/color_green"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/green" />
+
+        <Button
+            android:id="@+id/color_yellow"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/yellow" />
+
+        <Button
+            android:id="@+id/color_sky_blue"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/sky_blue" />
+
+        <Button
+            android:id="@+id/color_pale_cyan"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/pale_cyan" />
+
+        <Button
+            android:id="@+id/color_pink"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/pink" />
+
+        <Button
+            android:id="@+id/color_maroon"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/maroon" />
+
+        <Button
+            android:id="@+id/color_magenta"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_marginEnd="8dp"
+            android:background="@color/magenta" />
+
+        <Button
+            android:id="@+id/color_aqua"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:background="@color/aqua" />
+
+    </LinearLayout>
+
+
+
+</HorizontalScrollView>

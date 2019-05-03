@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">RichWYSIWYGEditor</string>
+    <string name="headline">제목</string>
+    <string name="textSize">텍스트 사이즈</string>
+    <string name="textColor">텍스트 색상</string>
+    <string name="textBold">텍스트 강조</string>
+    <string name="textItalic">텍스트 이탈릭</string>
+    <string name="textStrike">텍스트 취소선</string>
+    <string name="textAlign">텍스트 정렬</string>
+    <string name="confirmButton">등록</string>
+    <string name="cancelButton">취소</string>
+    <string name="ImageUpload">이미지 업로드</string>
+    <string name="videoUpload">비디오 업로드</string>
+</resources>
