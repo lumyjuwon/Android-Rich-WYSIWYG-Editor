@@ -1,4 +1,4 @@
-package com.example.sample;
+package com.lumyjuwon.sample;
 
 import org.junit.Test;
 

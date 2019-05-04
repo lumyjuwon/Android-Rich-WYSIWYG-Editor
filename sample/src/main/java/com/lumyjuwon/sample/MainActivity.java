@@ -1,4 +1,4 @@
-package com.example.sample;
+package com.lumyjuwon.sample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.example.sample;
+package com.lumyjuwon.sample;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
