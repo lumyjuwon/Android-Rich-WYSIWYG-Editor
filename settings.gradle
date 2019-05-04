@@ -1,1 +1,1 @@
-include ':app', ':richwysiwygeditor'
+include ':richwysiwygeditor', ':sample'
