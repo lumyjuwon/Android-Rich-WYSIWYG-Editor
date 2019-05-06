@@ -1,7 +1,6 @@
 package com.lumyjuwon.richwysiwygeditor;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -28,6 +26,9 @@ import android.widget.Toast;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.lumyjuwon.richwysiwygeditor.RichEditor.RichEditor;
+import com.lumyjuwon.richwysiwygeditor.WysiwygUtils.Keyboard;
+import com.lumyjuwon.richwysiwygeditor.WysiwygUtils.TextColor;
+import com.lumyjuwon.richwysiwygeditor.WysiwygUtils.Youtube;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,13 +147,13 @@ public class RichWysiwyg extends LinearLayout {
                 ArrayList<WriteCustomButton> button_objects = new ArrayList<>(Arrays.asList(textColorButton, textBgColorButton, textBoldButton, textItalicButton, textUnderlineButton, textStrikeButton));
                 for(RichEditor.Type type : types){
                     if(type.name().contains("FONT_COLOR")){
-                        textColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), getColor(type.name())));
+                        textColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), TextColor.getColor(type.name())));
                         if(textColorButton.getCheckedState())
                             textColorButton.switchCheckedState();
                         button_objects.remove(textColorButton);
                     }
                     else if(type.name().contains("BACKGROUND_COLOR")){
-                        textBgColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), getColor(type.name())));
+                        textBgColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), TextColor.getColor(type.name())));
                         if(textBgColorButton.getCheckedState())
                             textBgColorButton.switchCheckedState();
                         button_objects.remove(textBgColorButton);
@@ -360,8 +361,7 @@ public class RichWysiwyg extends LinearLayout {
                     else
                         textColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.black));
                     textColorButton.switchCheckedState();
-                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                    Keyboard.showKeyboard(view);
                 }
             });
         }
@@ -395,8 +395,7 @@ public class RichWysiwyg extends LinearLayout {
                     else
                         textBgColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.black));
                     textBgColorButton.switchCheckedState();
-                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                    Keyboard.showKeyboard(view);
                 }
             });
         }
@@ -417,8 +416,7 @@ public class RichWysiwyg extends LinearLayout {
                 clearPopupWindow();
                 content.setAlignLeft();
                 textAlignButton.switchCheckedState();
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                Keyboard.showKeyboard(view);
                 content.focusEditor();
             }
         });
@@ -430,8 +428,7 @@ public class RichWysiwyg extends LinearLayout {
                 clearPopupWindow();
                 content.setAlignCenter();
                 textAlignButton.switchCheckedState();
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                Keyboard.showKeyboard(view);
                 content.focusEditor();
             }
         });
@@ -443,8 +440,7 @@ public class RichWysiwyg extends LinearLayout {
                 clearPopupWindow();
                 content.setAlignRight();
                 textAlignButton.switchCheckedState();
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                Keyboard.showKeyboard(view);
                 content.focusEditor();
             }
         });
@@ -466,51 +462,6 @@ public class RichWysiwyg extends LinearLayout {
         }
     }
 
-    private int getColor(String color){
-        String color_ = color.toLowerCase();
-        String regex = "[a-zA-Z]+_[a-zA-Z]+_(\\w+)";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(color_);
-        String color_name;
-        if(matcher.find()) {
-            color_name = matcher.group(1);
-            switch (color_name) {
-                case "black":
-                    return R.color.black;
-                case "maroon":
-                    return R.color.maroon;
-                case "red":
-                    return R.color.red;
-                case "magenta":
-                    return R.color.magenta;
-                case "pink":
-                    return R.color.pink;
-                case "orange":
-                    return R.color.orange;
-                case "yellow":
-                    return R.color.yellow;
-                case "lime":
-                    return R.color.lime;
-                case "aqua":
-                    return R.color.aqua;
-                case "blue":
-                    return R.color.blue;
-                case "sky_blue":
-                    return R.color.sky_blue;
-                case "pale_cyan":
-                    return R.color.pale_cyan;
-                case "green":
-                    return R.color.green;
-                default:
-                    return R.color.black;
-            }
-        }
-        else{
-            return R.color.black;
-        }
-    }
-
     private void showYoutubeDialog() {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View promptView = layoutInflater.inflate(R.layout.dialog_youtube, null);
@@ -522,21 +473,21 @@ public class RichWysiwyg extends LinearLayout {
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("완료", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        String videoid = getVideoId(editText.getText().toString());
+                        String videoid = Youtube.getVideoId(editText.getText().toString());
                         if(videoid.equals("error")){
                             Toast.makeText(getContext() ,"유효하지 않은 URL 입니다.", Toast.LENGTH_LONG).show();
                         }
                         else{
                             content.insertYoutubeVideo(videoid);
                         }
-                        closeKeyboard(editText);
+                        Keyboard.closeKeyboard(editText);
                     }
                 })
                 .setNegativeButton("취소",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                closeKeyboard(editText);
+                                Keyboard.closeKeyboard(editText);
                             }
                         });
 
@@ -553,36 +504,12 @@ public class RichWysiwyg extends LinearLayout {
                 return false;
             }
         });
-        // youtube insert 누른 후 show keyboard 및 focus of content 지우고 in editText of dialog에 focus 줌
-        showKeyboard(alert);
+        // youtube insert 누른 후 show Keyboard 및 focus of content 지우고 in editText of dialog에 focus 줌
+        Keyboard.showSoftKeyboard(alert);
         content.clearFocus();
         editText.requestFocus();
         alert.show();
 
-    }
-
-    private String getVideoId(String url){
-        String[] patterns = {"https://www.youtube.com/watch\\?v=(\\S+)&list", "https://www.youtube.com/watch\\?v=(\\S+)\\??",
-                "https://youtu.be/(\\S+)\\?list", "https://youtu.be/(\\S+)\\??"};
-        Pattern p;
-        Matcher m;
-        for(String pattern : patterns) {
-            p = Pattern.compile(pattern);
-            m = p.matcher(url);
-            if(m.find()) {
-                return m.group(1);
-            }
-        }
-        return "error";
-    }
-
-    public void closeKeyboard(View view){
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-    }
-
-    public void showKeyboard(Dialog dialog){
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     public Button getCancelButton(){
