@@ -11,4 +11,21 @@
     <string name="cancelButton">취소</string>
     <string name="ImageUpload">이미지 업로드</string>
     <string name="videoUpload">비디오 업로드</string>
+
+    <string name="imagepicker_action_ok">OK</string>
+    <string name="imagepicker_action_done">DONE</string>
+    <string name="imagepicker_title_folder">Albums</string>
+    <string name="imagepicker_title_image">Galleries</string>
+    <string name="imagepicker_text_gif">GIF</string>
+    <string name="imagepicker_photo_count_multiple">%d images</string>
+    <string name="imagepicker_photo_count_single">%d image</string>
+    <string name="imagepicker_error_no_camera">No camera found</string>
+    <string name="imagepicker_error_create_image_file">Failed to create image file</string>
+    <string name="imagepicker_error_images_not_exist">Images not exist</string>
+    <string name="imagepicker_error_unknown">Unknown error</string>
+    <string name="imagepicker_msg_no_images">No images</string>
+    <string name="imagepicker_msg_no_write_external_storage_permission">To continue, please give access to your photos</string>
+    <string name="imagepicker_msg_no_camera_permission">To continue, please give access to take pictures</string>
+    <string name="imagepicker_msg_no_write_external_storage_camera_permission">To continue, please give access to take pictures</string>
+    <string name="imagepicker_msg_limit_images">Limit selection to %d images</string>
 </resources>

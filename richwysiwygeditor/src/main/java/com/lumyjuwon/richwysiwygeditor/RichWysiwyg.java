@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,6 +25,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.lumyjuwon.richwysiwygeditor.RichEditor.RichEditor;
 
 import java.util.ArrayList;
@@ -33,6 +37,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 public class RichWysiwyg extends LinearLayout {
 
     private EditText headline;
@@ -41,6 +47,7 @@ public class RichWysiwyg extends LinearLayout {
     private PopupWindow mPopupWindow;
     private Button cancelButton;
     private Button confirmButton;
+    private ImageButton insertImageButton;
     private WriteCustomButton textColorButton;
     private WriteCustomButton textBgColorButton;
     private WriteCustomButton textBoldButton;
@@ -49,6 +56,8 @@ public class RichWysiwyg extends LinearLayout {
     private WriteCustomButton textStrikeButton;
     private WriteCustomButton textAlignButton;
     private ArrayList<WriteCustomButton> buttonArrayList;
+    private ArrayList<Image> images = new ArrayList<>();
+    private ImagePicker imagePicker;
 
     public RichWysiwyg(Context context) {
         super(context);
@@ -120,6 +129,7 @@ public class RichWysiwyg extends LinearLayout {
             }
         }
     }
+
 
     private void init(){
         inflate(getContext(), R.layout.activity_write, this);
@@ -247,10 +257,10 @@ public class RichWysiwyg extends LinearLayout {
         buttonArrayList = new ArrayList<>(Arrays.asList(textColorButton, textBgColorButton, textBoldButton, textItalicButton, textUnderlineButton, textStrikeButton));
 
         // Image Insert 버튼
-        ImageButton imageInsertButton = findViewById(R.id.write_imageInsert);
-        imageInsertButton.setOnClickListener(new OnClickListener(){
+        insertImageButton = findViewById(R.id.write_imageInsert);
+        insertImageButton.setOnClickListener(new OnClickListener(){
             @Override public void onClick(View v) {
-
+                start();
             }
         });
 
@@ -271,6 +281,19 @@ public class RichWysiwyg extends LinearLayout {
             }
         });
 
+    }
+
+    private ImagePicker getImagePicker() {
+        imagePicker = ImagePicker.create((Activity) getContext());
+
+        return imagePicker.limit(10) // max images can be selected (99 by default)
+                .showCamera(true) // show camera or not (true by default)
+                .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
+                .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()); // can be full path
+    }
+
+    private void start() {
+        getImagePicker().start(); // start image picker activity with request code
     }
 
     // 글 사이즈 조절 설정 Window
@@ -337,6 +360,8 @@ public class RichWysiwyg extends LinearLayout {
                     else
                         textColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.black));
                     textColorButton.switchCheckedState();
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                 }
             });
         }
@@ -370,6 +395,8 @@ public class RichWysiwyg extends LinearLayout {
                     else
                         textBgColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.black));
                     textBgColorButton.switchCheckedState();
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                 }
             });
         }
@@ -390,6 +417,8 @@ public class RichWysiwyg extends LinearLayout {
                 clearPopupWindow();
                 content.setAlignLeft();
                 textAlignButton.switchCheckedState();
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                 content.focusEditor();
             }
         });
@@ -401,6 +430,8 @@ public class RichWysiwyg extends LinearLayout {
                 clearPopupWindow();
                 content.setAlignCenter();
                 textAlignButton.switchCheckedState();
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                 content.focusEditor();
             }
         });
@@ -412,6 +443,8 @@ public class RichWysiwyg extends LinearLayout {
                 clearPopupWindow();
                 content.setAlignRight();
                 textAlignButton.switchCheckedState();
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                 content.focusEditor();
             }
         });
@@ -544,7 +577,7 @@ public class RichWysiwyg extends LinearLayout {
     }
 
     public void closeKeyboard(View view){
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
@@ -558,6 +591,10 @@ public class RichWysiwyg extends LinearLayout {
 
     public Button getConfirmButton(){
         return confirmButton;
+    }
+
+    public ImageButton getInsertImageButton() {
+        return insertImageButton;
     }
 
     public RichEditor getContent(){

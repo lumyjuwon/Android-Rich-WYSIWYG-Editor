@@ -3,7 +3,7 @@ package com.lumyjuwon.richwysiwygeditor;
 import android.content.Context;
 import android.util.AttributeSet;
 
-public class WriteCustomButton extends android.support.v7.widget.AppCompatImageButton {
+public class WriteCustomButton extends androidx.appcompat.widget.AppCompatImageButton {
 
     private boolean isChecked = false;
 

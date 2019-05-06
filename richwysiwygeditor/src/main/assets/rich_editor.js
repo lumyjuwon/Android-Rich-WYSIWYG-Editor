@@ -235,12 +235,12 @@ RE.setBlockquote = function() {
 }
 
 RE.insertImage = function(url, alt) {
-    var html = '<img src="' + url + '" alt="' + alt + '" />';
+    var html = '<img src="' + url + '" alt="' + alt + '" /><br><br>';
     RE.insertHTML(html);
 }
 
 RE.insertYoutubeVideo = function(url) {
-    var html = '<iframe id="player" type="text/html" style="width:100%" height="240" src="https://www.youtube.com/embed/' + url + '?enablejsapi=1" frameborder="0"></iframe><br><br>'
+    var html = '<iframe id="player" type="text/html" src="https://www.youtube.com/embed/' + url + '?enablejsapi=1" frameborder="0"></iframe><br><br>'
     RE.insertHTML(html);
 }
 
