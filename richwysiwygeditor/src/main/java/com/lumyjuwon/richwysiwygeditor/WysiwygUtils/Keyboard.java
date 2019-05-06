@@ -7,6 +7,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+
 public class Keyboard {
 
     public static void closeKeyboard(View view){

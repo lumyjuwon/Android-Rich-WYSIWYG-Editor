@@ -14,6 +14,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.lumyjuwon.richwysiwygeditor.WysiwygUtils.Youtube;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -504,20 +506,6 @@ public class RichEditor extends WebView {
       }
     }
 
-    private String getVideoId(String url){
-      String[] patterns = {"https://www.youtube.com/watch\\?v=(\\S+)"};
-      Pattern p;
-      Matcher m;
-      for(String pattern : patterns) {
-        p = Pattern.compile(pattern);
-        m = p.matcher(url);
-        if(m.find()) {
-          return m.group(1);
-        }
-      }
-      return "error";
-    }
-
     @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
       String decode;
       String re_callback = "";
@@ -540,9 +528,10 @@ public class RichEditor extends WebView {
         return false;
       }
 
+      System.out.println(url);
       // User clicks the link that is youtube then post video id.
-      if(!getVideoId(url).equals("error")){
-        String videoid = getVideoId(url);
+      if(!Youtube.getVideoId(url).equals("error")){
+        String videoid = Youtube.getVideoId(url);
         if(!videoid.equals("error")) {
           if (mLoadYoutubeLinkListener != null) {
             mLoadYoutubeLinkListener.onReceivedEvent(videoid);
@@ -555,12 +544,12 @@ public class RichEditor extends WebView {
         stateCheck(re_state);
         return true;
       }
-      else if (TextUtils.indexOf(url, CALLBACK_SCHEME) == 0) {
-        callback(decode);
-        return true;
-      }
       else if (TextUtils.indexOf(url, STATE_SCHEME) == 0) {
         stateCheck(decode);
+        return true;
+      }
+      else if (TextUtils.indexOf(url, CALLBACK_SCHEME) == 0) {
+        callback(decode);
         return true;
       }
 

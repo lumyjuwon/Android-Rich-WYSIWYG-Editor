@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(wysiwyg.getContent().getHtml());
             }
         });
-
     }
 
     @Override

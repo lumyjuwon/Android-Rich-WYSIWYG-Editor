@@ -1,6 +1,5 @@
 package com.lumyjuwon.richwysiwygeditor;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 
-import android.os.Environment;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,22 +21,15 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.model.Image;
 import com.lumyjuwon.richwysiwygeditor.RichEditor.RichEditor;
+import com.lumyjuwon.richwysiwygeditor.WysiwygUtils.ImgPicker;
 import com.lumyjuwon.richwysiwygeditor.WysiwygUtils.Keyboard;
 import com.lumyjuwon.richwysiwygeditor.WysiwygUtils.TextColor;
 import com.lumyjuwon.richwysiwygeditor.WysiwygUtils.Youtube;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class RichWysiwyg extends LinearLayout {
 
@@ -56,9 +47,9 @@ public class RichWysiwyg extends LinearLayout {
     private WriteCustomButton textUnderlineButton;
     private WriteCustomButton textStrikeButton;
     private WriteCustomButton textAlignButton;
-    private ArrayList<WriteCustomButton> buttonArrayList;
-    private ArrayList<Image> images = new ArrayList<>();
-    private ImagePicker imagePicker;
+    private ArrayList<WriteCustomButton> popupButtons;
+    private ArrayList<WriteCustomButton> button_objects;
+    private LayoutInflater layoutInflater;
 
     public RichWysiwyg(Context context) {
         super(context);
@@ -144,7 +135,7 @@ public class RichWysiwyg extends LinearLayout {
         content.setOnDecorationChangeListener(new RichEditor.OnDecorationStateListener() {
             @Override
             public void onStateChangeListener(String text, List<RichEditor.Type> types) {
-                ArrayList<WriteCustomButton> button_objects = new ArrayList<>(Arrays.asList(textColorButton, textBgColorButton, textBoldButton, textItalicButton, textUnderlineButton, textStrikeButton));
+                button_objects = new ArrayList<>(Arrays.asList(textColorButton, textBgColorButton, textBoldButton, textItalicButton, textUnderlineButton, textStrikeButton));
                 for(RichEditor.Type type : types){
                     if(type.name().contains("FONT_COLOR")){
                         textColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), TextColor.getColor(type.name())));
@@ -254,14 +245,11 @@ public class RichWysiwyg extends LinearLayout {
         textStrikeButton = findViewById(R.id.write_textStrike);
         textStrikeButton.setOnClickListener(decorationButtonListener);
 
-        // 버튼 리스트
-        buttonArrayList = new ArrayList<>(Arrays.asList(textColorButton, textBgColorButton, textBoldButton, textItalicButton, textUnderlineButton, textStrikeButton));
-
         // Image Insert 버튼
         insertImageButton = findViewById(R.id.write_imageInsert);
         insertImageButton.setOnClickListener(new OnClickListener(){
             @Override public void onClick(View v) {
-                start();
+                ImgPicker.start(v);
             }
         });
 
@@ -278,29 +266,20 @@ public class RichWysiwyg extends LinearLayout {
         ImageButton videoInsertButton = findViewById(R.id.write_videoInsert);
         videoInsertButton.setOnClickListener(new OnClickListener(){
             @Override public void onClick(View v) {
+                clearPopupWindow();
+                clearPopupButton();
                 showYoutubeDialog();
             }
         });
 
-    }
+        popupButtons = new ArrayList<>(Arrays.asList(textColorButton, textBgColorButton, textAlignButton));
 
-    private ImagePicker getImagePicker() {
-        imagePicker = ImagePicker.create((Activity) getContext());
-
-        return imagePicker.limit(10) // max images can be selected (99 by default)
-                .showCamera(true) // show camera or not (true by default)
-                .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
-                .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()); // can be full path
-    }
-
-    private void start() {
-        getImagePicker().start(); // start image picker activity with request code
     }
 
     // 글 사이즈 조절 설정 Window
     private void showSizePopupWindow(View view) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        popupView = inflater.inflate(R.layout.popup_text_size, null);
+        layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        popupView = layoutInflater.inflate(R.layout.popup_text_size, null);
         mPopupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setAnimationStyle(1); // 생성 애니메이션 -1, 생성 애니메이션 사용 안 함 0
         mPopupWindow.showAsDropDown(view, 0, +15);
@@ -335,21 +314,14 @@ public class RichWysiwyg extends LinearLayout {
 
     // 글 색상 설정 Window
     private void showColorPopupWindow(View view) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        popupView = inflater.inflate(R.layout.popup_text_color, null);
+        layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        popupView = layoutInflater.inflate(R.layout.popup_text_color, null);
         mPopupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setAnimationStyle(-1); // 생성 애니메이션 -1, 생성 애니메이션 사용 안 함 0
         mPopupWindow.showAsDropDown(view, 0, +15);
 
-        Map<Integer,Integer> colorMap = new HashMap<Integer, Integer>(){{
-            put(R.id.color_white, R.color.white); put(R.id.color_black, R.color.black); put(R.id.color_maroon, R.color.maroon); put(R.id.color_red, R.color.red); put(R.id.color_lime, R.color.lime);
-            put(R.id.color_magenta, R.color.magenta); put(R.id.color_pink, R.color.pink); put(R.id.color_orange, R.color.orange); put(R.id.color_yellow, R.color.yellow);
-            put(R.id.color_aqua, R.color.aqua); put(R.id.color_blue, R.color.blue); put(R.id.color_sky_blue, R.color.sky_blue); put(R.id.color_pale_cyan, R.color.pale_cyan);
-            put(R.id.color_green, R.color.green);
-        }};
-
-        for (Integer key : colorMap.keySet()){
-            final int value = colorMap.get(key);
+        for (Integer key : TextColor.colorMap.keySet()){
+            final int value = TextColor.colorMap.get(key);
             Button popupButton = popupView.findViewById(key);
             popupButton.setOnClickListener(new OnClickListener(){
                 @Override
@@ -369,21 +341,14 @@ public class RichWysiwyg extends LinearLayout {
 
     // 글 배경 색상 설정 Window
     private void showBgColorPopupWindow(View view) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        popupView = inflater.inflate(R.layout.popup_text_color, null);
+        layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        popupView = layoutInflater.inflate(R.layout.popup_text_color, null);
         mPopupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setAnimationStyle(-1); // 생성 애니메이션 -1, 생성 애니메이션 사용 안 함 0
         mPopupWindow.showAsDropDown(view, 0, +15);
 
-        Map<Integer,Integer> colorMap = new HashMap<Integer, Integer>(){{
-            put(R.id.color_white, R.color.white); put(R.id.color_black, R.color.black); put(R.id.color_maroon, R.color.maroon); put(R.id.color_red, R.color.red); put(R.id.color_lime, R.color.lime);
-            put(R.id.color_magenta, R.color.magenta); put(R.id.color_pink, R.color.pink); put(R.id.color_orange, R.color.orange); put(R.id.color_yellow, R.color.yellow);
-            put(R.id.color_aqua, R.color.aqua); put(R.id.color_blue, R.color.blue); put(R.id.color_sky_blue, R.color.sky_blue); put(R.id.color_pale_cyan, R.color.pale_cyan);
-            put(R.id.color_green, R.color.green);
-        }};
-
-        for (Integer key : colorMap.keySet()){
-            final int value = colorMap.get(key);
+        for (Integer key : TextColor.colorMap.keySet()){
+            final int value = TextColor.colorMap.get(key);
             Button popupButton = popupView.findViewById(key);
             popupButton.setOnClickListener(new OnClickListener(){
                 @Override
@@ -403,8 +368,8 @@ public class RichWysiwyg extends LinearLayout {
 
     // 글 정렬 설정 Window
     private void showAlignPopupWindow(View view) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        popupView = inflater.inflate(R.layout.popup_text_align, null);
+        layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        popupView = layoutInflater.inflate(R.layout.popup_text_align, null);
         mPopupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setAnimationStyle(-1); // 생성 애니메이션 -1, 생성 애니메이션 사용 안 함 0
         mPopupWindow.showAsDropDown(view, 0, +15);
@@ -446,7 +411,7 @@ public class RichWysiwyg extends LinearLayout {
         });
     }
 
-    // 열려 있는 Window 닫음
+    // 열려있는 Window 닫음
     private void clearPopupWindow(){
         if(mPopupWindow != null) {
             mPopupWindow.dismiss();
@@ -456,14 +421,13 @@ public class RichWysiwyg extends LinearLayout {
 
     // 버튼 클릭 후 popup 버튼이 아닌 것을 클릭했을 때 기존 popup 버튼 false로 초기화
     private void clearPopupButton(){
-        ArrayList<WriteCustomButton> popupButtons = new ArrayList<>(Arrays.asList(textColorButton, textBgColorButton, textAlignButton));
         for(WriteCustomButton popupbutton : popupButtons){
             popupbutton.setCheckedState(false);
         }
     }
 
     private void showYoutubeDialog() {
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        layoutInflater = LayoutInflater.from(getContext());
         View promptView = layoutInflater.inflate(R.layout.dialog_youtube, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(promptView);
