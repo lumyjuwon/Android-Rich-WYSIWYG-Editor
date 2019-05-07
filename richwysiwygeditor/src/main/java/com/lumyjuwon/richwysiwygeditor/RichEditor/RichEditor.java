@@ -291,7 +291,7 @@ public class RichEditor extends WebView {
 
   @Override public void setPaddingRelative(int start, int top, int end, int bottom) {
     // still not support RTL.
-    setEditorPadding(start, top, end, bottom);
+    setPadding(start, top, end, bottom);
   }
 
   public RichEditor setEditorBackgroundColor(int color) {

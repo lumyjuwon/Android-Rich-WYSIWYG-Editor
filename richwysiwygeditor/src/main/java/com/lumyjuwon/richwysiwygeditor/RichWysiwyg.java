@@ -75,11 +75,11 @@ public class RichWysiwyg extends LinearLayout {
                 else {
                     closePopupWindow();
                     content.clearFocusEditor();
-                    if(view.getId() == R.id.write_textColor)
+                    if(button.getId() == R.id.write_textColor)
                         showColorPopupWindow(view);
-                    else if(view.getId() == R.id.write_textBgColor)
+                    else if(button.getId() == R.id.write_textBgColor)
                         showBgColorPopupWindow(view);
-                    else if(view.getId() == R.id.write_textAlign)
+                    else if(button.getId() == R.id.write_textAlign)
                         showAlignPopupWindow(view);
                     clearPopupButton();
                     button.switchCheckedState();
@@ -97,13 +97,13 @@ public class RichWysiwyg extends LinearLayout {
                 closePopupWindow();
                 clearPopupButton();
                 content.clearAndFocusEditor();
-                if(view.getId() == R.id.write_textBold)
+                if(button.getId() == R.id.write_textBold)
                     content.setBold();
-                else if(view.getId() == R.id.write_textItalic)
+                else if(button.getId() == R.id.write_textItalic)
                     content.setItalic();
-                else if(view.getId() == R.id.write_textUnderLine)
+                else if(button.getId() == R.id.write_textUnderLine)
                     content.setUnderline();
-                else if(view.getId() == R.id.write_textStrike)
+                else if(button.getId() == R.id.write_textStrike)
                     content.setStrikeThrough();
                 if(button.getCheckedState()) {
                     button.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.black));
