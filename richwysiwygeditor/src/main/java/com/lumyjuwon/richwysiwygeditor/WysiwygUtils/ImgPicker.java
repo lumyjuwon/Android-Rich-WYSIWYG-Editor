@@ -15,8 +15,8 @@ public class ImgPicker {
         imagePicker = ImagePicker.create((Activity) view.getContext());
 
         return imagePicker.limit(10) // max images can be selected (99 by default)
-                .toolbarFolderTitle("갤러리")
-                .toolbarDoneButtonText("완료")
+                .toolbarFolderTitle("Gallery")
+                .toolbarDoneButtonText("Confirm")
                 .showCamera(false) // show camera or not (true by default)
                 .folderMode(true)
                 .includeVideo(false)

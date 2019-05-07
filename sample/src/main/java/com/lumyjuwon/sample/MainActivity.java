@@ -25,7 +25,10 @@ public class MainActivity extends AppCompatActivity {
         wysiwyg = findViewById(R.id.richwysiwygeditor);
         wysiwyg.getContent()
                 .setEditorFontSize(18)
-                .setEditorPadding(4 , 0, 0, 0);
+                .setEditorPadding(4 , 0, 4, 0);
+        wysiwyg.getHeadlineEditText().setHint("Headline");
+        wysiwyg.getCancelButton().setText("Cancel");
+        wysiwyg.getConfirmButton().setText("Confirm");
         wysiwyg.getConfirmButton().setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v){
