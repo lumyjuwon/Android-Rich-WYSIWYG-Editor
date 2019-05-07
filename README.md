@@ -1,7 +1,5 @@
 # Android-RichWYSIWYGEditor
 ### Demo
- ![title](./art/sample.png){: width="100" height="100"}
- ![](./art/sample.png){:height="700px" width="400px"}
  ![](./art/sample2.gif)
  ![](./art/sample3.gif)
  ![](./art/sample4.gif)
