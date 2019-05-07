@@ -125,7 +125,7 @@ public class RichEditor extends WebView {
   }
 
   public interface YoutubeLoadLinkListener {
-    void onReceivedEvent(String videoid);
+    void onReceivedEvent(String videoId);
   }
 
   private static final String SETUP_HTML = "file:///android_asset/editor.html";
@@ -271,28 +271,32 @@ public class RichEditor extends WebView {
     return mContents;
   }
 
-  public void setEditorFontColor(int color) {
+  public RichEditor setEditorFontColor(int color) {
     String hex = convertHexColorString(color);
     exec("javascript:RE.setBaseTextColor('" + hex + "');");
+    return this;
   }
 
-  public void setEditorFontSize(int px) {
+  public RichEditor setEditorFontSize(int px) {
     exec("javascript:RE.setBaseFontSize('" + px + "px');");
+    return this;
   }
 
-  @Override public void setPadding(int left, int top, int right, int bottom) {
+   public RichEditor setEditorPadding(int left, int top, int right, int bottom) {
     super.setPadding(left, top, right, bottom);
     exec("javascript:RE.setPadding('" + left + "px', '" + top + "px', '" + right + "px', '" + bottom
         + "px');");
+    return this;
   }
 
   @Override public void setPaddingRelative(int start, int top, int end, int bottom) {
     // still not support RTL.
-    setPadding(start, top, end, bottom);
+    setEditorPadding(start, top, end, bottom);
   }
 
-  public void setEditorBackgroundColor(int color) {
+  public RichEditor setEditorBackgroundColor(int color) {
     setBackgroundColor(color);
+    return this;
   }
 
   @Override public void setBackgroundColor(int color) {
@@ -319,12 +323,14 @@ public class RichEditor extends WebView {
     exec("javascript:RE.setBackgroundImage('url(" + url + ")');");
   }
 
-  public void setEditorWidth(int px) {
+  public RichEditor setEditorWidth(int px) {
     exec("javascript:RE.setWidth('" + px + "px');");
+    return this;
   }
 
-  public void setEditorHeight(int px) {
+  public RichEditor setEditorHeight(int px) {
     exec("javascript:RE.setHeight('" + px + "px');");
+    return this;
   }
 
   public void setPlaceholder(String placeholder) {
@@ -528,7 +534,6 @@ public class RichEditor extends WebView {
         return false;
       }
 
-      System.out.println(url);
       // User clicks the link that is youtube then post video id.
       if(!Youtube.getVideoId(url).equals("error")){
         String videoid = Youtube.getVideoId(url);

@@ -8,7 +8,7 @@
     >
 
     <com.lumyjuwon.richwysiwygeditor.RichWysiwyg
-        android:id="@+id/rich"
+        android:id="@+id/richwysiwygeditor"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

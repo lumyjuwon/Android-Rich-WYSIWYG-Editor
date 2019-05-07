@@ -1,15 +1,12 @@
 package com.lumyjuwon.richwysiwygeditor;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.lumyjuwon.richwysiwygeditor.RichEditor.RichEditor;
 import com.lumyjuwon.richwysiwygeditor.WysiwygUtils.ImgPicker;
@@ -48,7 +44,7 @@ public class RichWysiwyg extends LinearLayout {
     private WriteCustomButton textStrikeButton;
     private WriteCustomButton textAlignButton;
     private ArrayList<WriteCustomButton> popupButtons;
-    private ArrayList<WriteCustomButton> button_objects;
+    private ArrayList<WriteCustomButton> Buttons;
     private LayoutInflater layoutInflater;
 
     public RichWysiwyg(Context context) {
@@ -73,11 +69,11 @@ public class RichWysiwyg extends LinearLayout {
                 WriteCustomButton button = (WriteCustomButton) view;
 
                 if(button.getCheckedState()) {
-                    clearPopupWindow();
+                    closePopupWindow();
                     button.switchCheckedState();
                 }
                 else {
-                    clearPopupWindow();
+                    closePopupWindow();
                     content.clearFocusEditor();
                     if(view.getId() == R.id.write_textColor)
                         showColorPopupWindow(view);
@@ -98,7 +94,7 @@ public class RichWysiwyg extends LinearLayout {
             if(view instanceof WriteCustomButton) {
                 WriteCustomButton button = (WriteCustomButton) view;
 
-                clearPopupWindow();
+                closePopupWindow();
                 clearPopupButton();
                 content.clearAndFocusEditor();
                 if(view.getId() == R.id.write_textBold)
@@ -135,19 +131,19 @@ public class RichWysiwyg extends LinearLayout {
         content.setOnDecorationChangeListener(new RichEditor.OnDecorationStateListener() {
             @Override
             public void onStateChangeListener(String text, List<RichEditor.Type> types) {
-                button_objects = new ArrayList<>(Arrays.asList(textColorButton, textBgColorButton, textBoldButton, textItalicButton, textUnderlineButton, textStrikeButton));
+                Buttons = new ArrayList<>(Arrays.asList(textColorButton, textBgColorButton, textBoldButton, textItalicButton, textUnderlineButton, textStrikeButton));
                 for(RichEditor.Type type : types){
                     if(type.name().contains("FONT_COLOR")){
                         textColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), TextColor.getColor(type.name())));
                         if(textColorButton.getCheckedState())
                             textColorButton.switchCheckedState();
-                        button_objects.remove(textColorButton);
+                        Buttons.remove(textColorButton);
                     }
                     else if(type.name().contains("BACKGROUND_COLOR")){
                         textBgColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), TextColor.getColor(type.name())));
                         if(textBgColorButton.getCheckedState())
                             textBgColorButton.switchCheckedState();
-                        button_objects.remove(textBgColorButton);
+                        Buttons.remove(textBgColorButton);
                     }
                     else{
                         switch(type){
@@ -155,31 +151,31 @@ public class RichWysiwyg extends LinearLayout {
                                 textBoldButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.sky_blue));
                                 if(!textBoldButton.getCheckedState())
                                     textBoldButton.switchCheckedState();
-                                button_objects.remove(textBoldButton);
+                                Buttons.remove(textBoldButton);
                                 break;
                             case ITALIC:
                                 textItalicButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.sky_blue));
                                 if(!textItalicButton.getCheckedState())
                                     textItalicButton.switchCheckedState();
-                                button_objects.remove(textItalicButton);
+                                Buttons.remove(textItalicButton);
                                 break;
                             case UNDERLINE:
                                 textUnderlineButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.sky_blue));
                                 if(!textUnderlineButton.getCheckedState())
                                     textUnderlineButton.switchCheckedState();
-                                button_objects.remove(textUnderlineButton);
+                                Buttons.remove(textUnderlineButton);
                                 break;
                             case STRIKETHROUGH:
                                 textStrikeButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.sky_blue));
                                 if(!textStrikeButton.getCheckedState())
                                     textStrikeButton.switchCheckedState();
-                                button_objects.remove(textStrikeButton);
+                                Buttons.remove(textStrikeButton);
                                 break;
                             default:
                         }
                     }
                 }
-                for(WriteCustomButton button : button_objects){
+                for(WriteCustomButton button : Buttons){
                     button.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), R.color.black));
                     button.setCheckedState(false);
                 }
@@ -191,7 +187,7 @@ public class RichWysiwyg extends LinearLayout {
         cancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearPopupWindow();
+                closePopupWindow();
             }
         });
 
@@ -200,7 +196,7 @@ public class RichWysiwyg extends LinearLayout {
         confirmButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearPopupWindow();
+                closePopupWindow();
                 // 백엔드
             }
         });
@@ -210,7 +206,7 @@ public class RichWysiwyg extends LinearLayout {
         textSizeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view){
-                clearPopupWindow();
+                closePopupWindow();
             }
         });
 
@@ -256,8 +252,8 @@ public class RichWysiwyg extends LinearLayout {
         // embed youtube link를 클릭했을 경우 youtube app으로 실행
         content.setYoutubeLoadLinkListener(new RichEditor.YoutubeLoadLinkListener() {
             @Override
-            public void onReceivedEvent(String mVideoId) {
-                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + mVideoId));
+            public void onReceivedEvent(String videoId) {
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoId));
                 getContext().startActivity(webIntent);
             }
         });
@@ -266,9 +262,9 @@ public class RichWysiwyg extends LinearLayout {
         ImageButton videoInsertButton = findViewById(R.id.write_videoInsert);
         videoInsertButton.setOnClickListener(new OnClickListener(){
             @Override public void onClick(View v) {
-                clearPopupWindow();
+                closePopupWindow();
                 clearPopupButton();
-                showYoutubeDialog();
+                Youtube.showYoutubeDialog(layoutInflater, content, v);
             }
         });
 
@@ -288,7 +284,7 @@ public class RichWysiwyg extends LinearLayout {
         textAlignLeftButton.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View view){
-                clearPopupWindow();
+                closePopupWindow();
                 content.setAlignLeft();
             }
         });
@@ -297,7 +293,7 @@ public class RichWysiwyg extends LinearLayout {
         textAlignCenterButton.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View view){
-                clearPopupWindow();
+                closePopupWindow();
                 content.setAlignCenter();
             }
         });
@@ -306,7 +302,7 @@ public class RichWysiwyg extends LinearLayout {
         textAlignRightButton.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View view){
-                clearPopupWindow();
+                closePopupWindow();
                 content.setAlignRight();
             }
         });
@@ -326,7 +322,7 @@ public class RichWysiwyg extends LinearLayout {
             popupButton.setOnClickListener(new OnClickListener(){
                 @Override
                 public void onClick(View view){
-                    clearPopupWindow();
+                    closePopupWindow();
                     content.setTextColor(ContextCompat.getColor(getContext().getApplicationContext(), value));
                     if(value != R.color.white)
                         textColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), value));
@@ -353,7 +349,7 @@ public class RichWysiwyg extends LinearLayout {
             popupButton.setOnClickListener(new OnClickListener(){
                 @Override
                 public void onClick(View view){
-                    clearPopupWindow();
+                    closePopupWindow();
                     content.setTextBackgroundColor(ContextCompat.getColor(getContext().getApplicationContext(), value));
                     if(value != R.color.white)
                         textBgColorButton.setColorFilter(ContextCompat.getColor(getContext().getApplicationContext(), value));
@@ -378,7 +374,7 @@ public class RichWysiwyg extends LinearLayout {
         textAlignLeftButton.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View view){
-                clearPopupWindow();
+                closePopupWindow();
                 content.setAlignLeft();
                 textAlignButton.switchCheckedState();
                 Keyboard.showKeyboard(view);
@@ -390,7 +386,7 @@ public class RichWysiwyg extends LinearLayout {
         textAlignCenterButton.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View view){
-                clearPopupWindow();
+                closePopupWindow();
                 content.setAlignCenter();
                 textAlignButton.switchCheckedState();
                 Keyboard.showKeyboard(view);
@@ -402,7 +398,7 @@ public class RichWysiwyg extends LinearLayout {
         textAlignRightButton.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View view){
-                clearPopupWindow();
+                closePopupWindow();
                 content.setAlignRight();
                 textAlignButton.switchCheckedState();
                 Keyboard.showKeyboard(view);
@@ -412,7 +408,7 @@ public class RichWysiwyg extends LinearLayout {
     }
 
     // 열려있는 Window 닫음
-    private void clearPopupWindow(){
+    private void closePopupWindow(){
         if(mPopupWindow != null) {
             mPopupWindow.dismiss();
             mPopupWindow = null;
@@ -426,62 +422,16 @@ public class RichWysiwyg extends LinearLayout {
         }
     }
 
-    private void showYoutubeDialog() {
-        layoutInflater = LayoutInflater.from(getContext());
-        View promptView = layoutInflater.inflate(R.layout.dialog_youtube, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-        alertDialogBuilder.setView(promptView);
-
-        final EditText editText = promptView.findViewById(R.id.userInputDialog);
-        // setup a dialog window
-        alertDialogBuilder.setCancelable(false)
-                .setPositiveButton("완료", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        String videoid = Youtube.getVideoId(editText.getText().toString());
-                        if(videoid.equals("error")){
-                            Toast.makeText(getContext() ,"유효하지 않은 URL 입니다.", Toast.LENGTH_LONG).show();
-                        }
-                        else{
-                            content.insertYoutubeVideo(videoid);
-                        }
-                        Keyboard.closeKeyboard(editText);
-                    }
-                })
-                .setNegativeButton("취소",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                Keyboard.closeKeyboard(editText);
-                            }
-                        });
-
-        // create an alert dialog
-        AlertDialog alert = alertDialogBuilder.create();
-        // back key를 눌렀을 때 dialog 닫음
-        alert.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.cancel();
-                    return true;
-                }
-                return false;
-            }
-        });
-        // youtube insert 누른 후 show Keyboard 및 focus of content 지우고 in editText of dialog에 focus 줌
-        Keyboard.showSoftKeyboard(alert);
-        content.clearFocus();
-        editText.requestFocus();
-        alert.show();
-
-    }
-
     public Button getCancelButton(){
         return cancelButton;
     }
 
     public Button getConfirmButton(){
         return confirmButton;
+    }
+
+    public EditText getHeadlineEditText(){
+        return headline;
     }
 
     public ImageButton getInsertImageButton() {

@@ -15,8 +15,11 @@ public class ImgPicker {
         imagePicker = ImagePicker.create((Activity) view.getContext());
 
         return imagePicker.limit(10) // max images can be selected (99 by default)
-                .showCamera(true) // show camera or not (true by default)
-                .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
+                .toolbarFolderTitle("갤러리")
+                .toolbarDoneButtonText("완료")
+                .showCamera(false) // show camera or not (true by default)
+                .folderMode(true)
+                .includeVideo(false)
                 .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()); // can be full path
     }
 
