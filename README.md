@@ -25,8 +25,8 @@ You should migrate your project to AndroidX (How to migrate: https://developer.a
 
 ### Todo List
 1. Add other functions.  
-2. Refactory variable name & Popup Fucntions.  
-3. Solve html default background color bugs.  
+2. Refactory variable names & Popup Fucntions.  
+3. Fix html default background color bugs.  
 4. Add Function Button setting method.
 
 ## How to use it
