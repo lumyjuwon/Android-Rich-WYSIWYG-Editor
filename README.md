@@ -8,7 +8,7 @@
  ![](./art/sample7.gif)
 
 ### AndroidX
-Android-RichWYSIWYGEditor uses AndroidX  
+Android-Rich-WYSIWYG-Editor uses AndroidX  
 You should migrate your project to AndroidX (How to migrate: https://developer.android.com/jetpack/androidx/migrate)  
 
 ### Functions
