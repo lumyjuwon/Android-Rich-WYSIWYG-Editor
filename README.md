@@ -31,6 +31,17 @@ You should migrate your project to AndroidX (How to migrate: https://developer.a
 
 ## How to use it
 ### Setup
+Add this maven to your ```project's``` build.gradle
+```
+repositories {
+    maven { url "https://jitpack.io" }
+}
+```
+
+And add this to your ```module's``` build.gradle
+```
+implementation 'com.github.lumyjuwon:Android-RichWYSIWYGEditor:1.0.0'
+```
 ### Sample
 ```
     private RichWysiwyg wysiwyg;
