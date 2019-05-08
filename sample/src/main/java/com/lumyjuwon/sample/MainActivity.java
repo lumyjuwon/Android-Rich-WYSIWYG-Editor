@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0, l = images.size(); i < l; i++) {
             stringBuffer.append(images.get(i).getPath()).append("\n");
             // Handle this
-            wysiwyg.getContent().insertImage("file://" + images.get(i).getPath(), "A");
+            wysiwyg.getContent().insertImage("file://" + images.get(i).getPath(), "alt");
         }
     }
 }
