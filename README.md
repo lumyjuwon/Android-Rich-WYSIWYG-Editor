@@ -1,4 +1,4 @@
-# Android-Rich-Wysiwyg-Editor
+# Android-Rich-WYSIWYG-Editor
 ### Demo
  ![](./art/sample2.gif)
  ![](./art/sample3.gif)
