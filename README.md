@@ -1,4 +1,4 @@
-# Android-RichWYSIWYGEditor
+# Android-Rich-Wysiwyg-Editor
 ### Demo
  ![](./art/sample2.gif)
  ![](./art/sample3.gif)
@@ -40,7 +40,7 @@ repositories {
 
 And add this to your ```module's``` build.gradle
 ```
-implementation 'com.github.lumyjuwon:Android-RichWYSIWYGEditor:1.0.0'
+implementation 'com.github.lumyjuwon:Android-Rich-Wysiwyg-Editor:1.0.0'
 ```
 ### Sample
 ```
